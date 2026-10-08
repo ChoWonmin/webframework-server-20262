@@ -1,9 +1,6 @@
 package com.example.webframework.user;
 
-import com.example.webframework.user.dto.LoginRequest;
-import com.example.webframework.user.dto.LoginResponse;
-import com.example.webframework.user.dto.SignUpRequest;
-import com.example.webframework.user.dto.SignUpResponse;
+import com.example.webframework.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,6 +27,14 @@ public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
+
+    @Transactional(readOnly = true)
+    public MeResponse me(Long accountId) {
+        UserAccount userAccount = userAccountRepository.findByIdAndDeleted(accountId, false)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용할 수 없는 계정입니다."));
+
+        return new MeResponse(userAccount.getId(), userAccount.getEmail(), userAccount.getNickname());
+    }
 
     public LoginResponse login(LoginRequest request) {
 
