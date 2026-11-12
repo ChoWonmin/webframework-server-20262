@@ -1,8 +1,11 @@
 package com.example.webframework.user;
 
+import com.example.webframework.auth.RefreshTokenService;
 import com.example.webframework.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -33,8 +36,28 @@ public class UserAccountController {
     ) {
         LoginResponse response = userAccountService.login(request);
 
+        ResponseCookie cookie = ResponseCookie
+                .from("refreshToken", response.refreshToken())
+                .httpOnly(true)
+                .secure(false) // 실습에서는 https가 아니라서 false
+                .sameSite("Lax")
+                .path("/user-account")
+                .maxAge(RefreshTokenService.EXPIRES_IN_SECONDS)
+                .build();
+
         return ResponseEntity.ok()
                 .header("Cache-Control", "no-store")
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refresh(
+            @CookieValue(name = "refreshToken", required = false) String refreshToken
+    ) {
+        LoginResponse response = userAccountService.refresh(refreshToken);
+
+        return ResponseEntity.ok()
                 .body(response);
     }
 

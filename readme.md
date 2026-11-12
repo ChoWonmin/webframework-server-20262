@@ -5,6 +5,5 @@ docker compose up -d --wait
 ```
 
 openssl rand -base64 32
-# webframework-server-20262
-# webframework-server-20262
-# webframework-server-20262
+
+

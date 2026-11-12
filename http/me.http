@@ -1,3 +1,9 @@
 GET http://localhost:8080/user-account/me
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3ZWJmcmFtZXdvcmstc2VydmVyIiwibmlja25hbWUiOiJuaWNrNDQ0Iiwic3ViIjoiNCIsImV4cCI6MTc5MTQzMDcyMCwiaWF0IjoxNzkxNDI5ODIwfQ.8wDJugKZRYCSN1qqN7gOYAqUYnmBC9peyieoBYFKntk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3ZWJmcmFtZXdvcmstc2VydmVyIiwibmlja25hbWUiOiJuaWNrOTk5Iiwic3ViIjoiOCIsImV4cCI6MTc5MzIzNzI5OSwiaWF0IjoxNzkzMjM2Mzk5fQ.B5M2S_x479NMZFWUibSXsqehQKC771G9tPtiNFbkC6g
 Content-Type: application/json
+
+# 1. 로그인 accessToken A
+# 2. A로 refresh -> 새로운 accessToken B
+# 3. B로 me -> 성공
+# 4. A로 me -> 성공 (accessToken이 시간 만료되지 않으면)
+

@@ -1,0 +1,3 @@
+POST http://localhost:8080/user-account/refresh
+Content-Type: application/json
+Cookie: refreshToken=SoZqrqn8zJxXvjodM3u79hne5_apxMXH2h7V1R8FwrI

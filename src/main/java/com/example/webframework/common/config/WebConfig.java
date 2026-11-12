@@ -13,7 +13,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/user-account/**") // 모든 api는 "/**"
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("Content-Type", "Authorization");
+                .allowedHeaders("Content-Type", "Authorization")
+                .allowCredentials(true); // 허용된 프론트엔드가 쿠키 같은 인증 정보를 포함한 cors 요청, 응답 허용
+                // "허용한 프론트엔드에서는 쿠티를 포함한 통신해도 됩니다."
 
     }
 

@@ -26,8 +26,10 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/user-account/login", "/user-account/signup" // 로그인, 회원가입은 jwt인증 없이 호출할 수 있어야한다.
+                                , "/user-account/refresh"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/user-account/check-email").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/ws-chat").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user-account/me").authenticated()
                         .anyRequest().denyAll()
                 )

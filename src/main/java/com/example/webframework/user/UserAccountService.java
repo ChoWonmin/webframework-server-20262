@@ -1,5 +1,6 @@
 package com.example.webframework.user;
 
+import com.example.webframework.auth.RefreshTokenService;
 import com.example.webframework.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,14 +25,54 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserAccountService {
 
+    private static long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 15 * 60;
+
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
+
+    private final RefreshTokenService refreshTokenService;
+
+    private String createJwtToken(UserAccount userAccount) {
+        Instant now = Instant.now();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("webframework-server")
+                .subject(userAccount.getId().toString())
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(ACCESS_TOKEN_EXPIRES_IN_SECONDS))
+                .claim("nickname", userAccount.getNickname())
+                .build();
+
+        JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).type("JWT").build();
+
+        return jwtEncoder.encode(
+                JwtEncoderParameters.from(header, claims)
+        ).getTokenValue();
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponse refresh(String rawToken) {
+        Long userAccountId = refreshTokenService.getUserAccountId(rawToken);
+
+        System.out.println("refresh token: " + rawToken);
+
+        UserAccount userAccount = userAccountRepository.findByIdAndDeleted(userAccountId, false)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용할 수 없는 계정입니다."));
+
+        String accessToken = createJwtToken(userAccount);
+
+        return new LoginResponse(accessToken, "Bearer", ACCESS_TOKEN_EXPIRES_IN_SECONDS, null);
+        // 1, 재발급 시에 refresh token을 null이면 로그인 후 1주일 후에는 무조건 로그인 해야함.
+        // 2. 재발급 시에 refresh token을 제공하면 refresh token 만료 전에 접속하면 무한 로그인 상태
+    }
 
     @Transactional(readOnly = true)
     public MeResponse me(Long accountId) {
         UserAccount userAccount = userAccountRepository.findByIdAndDeleted(accountId, false)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용할 수 없는 계정입니다."));
+
+        System.out.println("내 정보 요청 " + userAccount.getId());
 
         return new MeResponse(userAccount.getId(), userAccount.getEmail(), userAccount.getNickname());
     }
@@ -56,31 +97,16 @@ public class UserAccountService {
             throw loginFailed();
         }
 
-        // jwt 발행 (유효시간 15분)
-        Instant now = Instant.now();
-        long expiresIn = 15 * 60;
+        String accessToken = createJwtToken(userAccount);
 
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("webframework-server")
-                .subject(userAccount.getId().toString())
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(expiresIn))
-                .claim("nickname", userAccount.getNickname())
-                .build();
+        String refreshToken = refreshTokenService.issue(userAccount.getId());
 
-        JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).type("JWT").build();
-
-        String accessToken = jwtEncoder.encode(
-                JwtEncoderParameters.from(header, claims)
-        ).getTokenValue();
-
-        return new LoginResponse(accessToken, "Bearer", expiresIn);
+        return new LoginResponse(accessToken, "Bearer", ACCESS_TOKEN_EXPIRES_IN_SECONDS, refreshToken);
     }
 
     private ResponseStatusException loginFailed() {
         return new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 올바르지 않습니다.");
     }
-
 
     public SignUpResponse singUp(SignUpRequest request) {
         // 이메일, 닉네임 이미 디비에 있는지 체크
