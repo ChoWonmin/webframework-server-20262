@@ -1,0 +1,8 @@
+PUT http://localhost:8080/user-account/me/avatar
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3ZWJmcmFtZXdvcmstc2VydmVyIiwibmlja25hbWUiOiJuaWNrOTk5Iiwic3ViIjoiOCIsImV4cCI6MTc5NDQ2NDY1MCwiaWF0IjoxNzk0NDYzNzUwfQ.9SV74VSmVAa0R7ymLS5Vc3dNSazyLn09Pb14LAWbOcA
+Content-Type: application/json
+
+{
+  "avatarId": 3
+}
+

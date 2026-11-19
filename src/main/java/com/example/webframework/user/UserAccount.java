@@ -1,8 +1,7 @@
 package com.example.webframework.user;
 
 import com.example.webframework.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +22,10 @@ public class UserAccount extends BaseEntity {
 
     @Column(nullable = false, length = 20)
     private String nickname;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "avatar_id")
+    private Avatar avatar;
 
     public UserAccount(String email, String passwordHash, String nickname) {
         this.email = email;

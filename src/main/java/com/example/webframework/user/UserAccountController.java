@@ -11,17 +11,34 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user-account")
 @RequiredArgsConstructor
 public class UserAccountController {
     private final UserAccountService userAccountService;
 
+    @GetMapping("/avatars")
+    public List<AvatarResponse> getAvatars() {
+        return userAccountService.getAvatars();
+    }
+
+    @PutMapping("/me/avatar")
+    public ResponseEntity<Void> updateAvatar(
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid @RequestBody UpdateAvatarRequest request
+     ) {
+        Long accountId = Long.valueOf(jwt.getSubject());
+
+        userAccountService.updateAvatar(accountId, request.avatarId());
+
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/me")
     public ResponseEntity<MeResponse> me(@AuthenticationPrincipal Jwt jwt) {
         Long accountId = Long.valueOf(jwt.getSubject());
-
-        System.out.println("accountId: " + accountId);
 
         return ResponseEntity.ok()
                 .body(userAccountService.me(accountId));

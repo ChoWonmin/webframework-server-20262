@@ -1,0 +1,3 @@
+GET http://localhost:8080/put-avatar
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3ZWJmcmFtZXdvcmstc2VydmVyIiwibmlja25hbWUiOiJuaWNrOTk5Iiwic3ViIjoiOCIsImV4cCI6MTc5NDQ1MzUyOCwiaWF0IjoxNzk0NDUyNjI4fQ.VsgCJR1n3Z8wuhaCvPnPQ-lEZvdxFtEnDZil8D6KQ8M
+Content-Type: application/json

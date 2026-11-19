@@ -1,0 +1,4 @@
+GET http://localhost:8080/user-account/avatars
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3ZWJmcmFtZXdvcmstc2VydmVyIiwibmlja25hbWUiOiJuaWNrOTk5Iiwic3ViIjoiOCIsImV4cCI6MTc5NDQ2MDg0NywiaWF0IjoxNzk0NDU5OTQ3fQ.EnC9EgyBZd4lZyPL7MHFf7sX1tVADvmfzDGpXZOWL0o
+Content-Type: application/json
+
