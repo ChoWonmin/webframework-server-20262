@@ -41,4 +41,8 @@ public class BaseEntity {
     public void softDelete() {
         deleted = true;
     }
+
+    public void restore() {
+        deleted = false;
+    }
 }
