@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
-     name = "chat_room_id",
+     name = "chat_room_like",
      uniqueConstraints = @UniqueConstraint(
              name = "uk_chat_room_like_room_user",
              columnNames = { "chat_room_id", "user_account_id" }

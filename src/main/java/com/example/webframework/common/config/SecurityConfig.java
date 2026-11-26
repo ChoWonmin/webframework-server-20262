@@ -32,6 +32,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/ws-chat").permitAll()
                         .requestMatchers(HttpMethod.GET, "/user-account/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/user-account/**").authenticated()
+
+                        .requestMatchers(HttpMethod.POST, "/chat-rooms/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/chat-rooms/**").authenticated()
+
+
 //                        .requestMatchers(HttpMethod.GET, "/put-avatar").authenticated()
                         .anyRequest().denyAll()
                 )

@@ -1,0 +1,26 @@
+@accessToken = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3ZWJmcmFtZXdvcmstc2VydmVyIiwibmlja25hbWUiOiJuaWNrNDQ0Iiwic3ViIjoiNCIsImV4cCI6MTc5NTY3NjAyNywiaWF0IjoxNzk1NjcyNDI3fQ.6FES28U-ZddJQO7FK5L0SRxEdiVAxzZtdVckJIwG7Do
+@roomId = 5
+
+### 채팅방 생성
+POST http://localhost:8080/chat-rooms
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "4번째",
+  "description": "4번째 방이고 비밀번호는 4321@  방장은 999 4번째 방이고 비밀번호는 4321@  방장은 999 4번째 방이고 비밀번호는 4321@  방장은 999",
+  "password": "4321@"
+}
+
+### 채팅방 목록
+GET http://localhost:8080/chat-rooms
+Authorization: Bearer {{accessToken}}
+
+### 채팅방 가입
+POST http://localhost:8080/chat-rooms/{{roomId}}/join
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "password": "1234@"
+}
